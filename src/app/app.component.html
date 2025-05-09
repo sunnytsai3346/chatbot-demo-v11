@@ -1,76 +1,46 @@
-<script type="text/javascript">
-  var gk_isXlsx = false;
-  var gk_xlsxFileLookup = {};
-  var gk_fileData = {};
-  function filledCell(cell) {
-    return cell !== '' && cell != null;
-  }
-  function loadFileData(filename) {
-  if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-      try {
-          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-          var firstSheetName = workbook.SheetNames[0];
-          var worksheet = workbook.Sheets[firstSheetName];
+<mat-sidenav-container class="sidenav-container">
+  <!-- Sidenav on right -->
+  <mat-sidenav #sidenav mode="over" position="end" class="sidenav">
+    <button mat-button (click)="sidenav.close()" class="clear-button">Close</button>
+    <button (click)="clearMessages()" class="clear-button">🗑️ Clear Log</button>
 
-          // Convert sheet to JSON to filter blank rows
-          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-          // Filter out blank rows (rows where all cells are empty, null, or undefined)
-          var filteredData = jsonData.filter(row => row.some(filledCell));
+    <div class="chat-container">
+      <mat-form-field appearance="outline" class="language-select">
+        <mat-label>Select Language</mat-label>
+        <mat-select [(ngModel)]="selectedLanguage">
+          <mat-option *ngFor="let lang of languages" [value]="lang.code">
+            {{ lang.name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-          // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-          var headerRowIndex = filteredData.findIndex((row, index) =>
-            row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-          );
-          // Fallback
-          if (headerRowIndex === -1 || headerRowIndex > 25) {
-            headerRowIndex = 0;
-          }
+      <div class="messages" #scrollMe>
+        <div *ngFor="let msg of messages" [ngClass]="msg.sender">
+          <b>{{ msg.sender }}:</b> {{ msg.text }}
+        </div>
+      </div>
 
-          // Convert filtered JSON back to CSV
-          var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-          return csv;
-      } catch (e) {
-          console.error(e);
-          return "";
-      }
-  }
-  return gk_fileData[filename] || "";
-  }
-  </script><mat-sidenav-container class="sidenav-container">
-<!-- Sidenav on right -->
-<mat-sidenav #sidenav mode="over" position="end" class="sidenav">
-<button mat-button (click)="sidenav.close()" class="clear-button">Close</button>
-<button (click)="clearMessages()" class="clear-button">🗑️ Clear Log</button>
+      <div class="chat-input">
+        <input
+          [(ngModel)]="userMessage"
+          (keyup.enter)="sendMessage()"
+          placeholder="Type your message..."
+          class="input-box"
+        />
+        <button (click)="startVoiceInput()" class="voice-button" [ngClass]="{'listening': isListening}">
+          🎤
+        </button>
+        <button (click)="sendMessage()" class="send-button">Send</button>
+      </div>
+    </div>
+  </mat-sidenav>
 
-<div class="chat-container">
-<div class="messages" #scrollMe>
-  <div *ngFor="let msg of messages" [ngClass]="msg.sender">
-    <b>{{ msg.sender }}:</b> {{ msg.text }}
+  <mat-toolbar color="primary">
+    <span class="spacer"></span>
+    <button mat-button (click)="toggleSidenav()" class="send-button">💬 Chat</button>
+  </mat-toolbar>
+
+  <div class="main-content">
+    <p>🏠 Main content here</p>
   </div>
-</div>
-
-<div class="chat-input">
-  <input
-    [(ngModel)]="userMessage"
-    (keyup.enter)="sendMessage()"
-    placeholder="Type your message..."
-    class="input-box"
-  />
-  <button (click)="startVoiceInput()" class="voice-button" [ngClass]="{'listening': isListening}">
-    🎤
-  </button>
-  <button (click)="sendMessage()" class="send-button">Send</button>
-</div>
-</div>
-</mat-sidenav>
-
-<mat-toolbar color="primary">
-<span class="spacer"></span>
-<button mat-button (click)="toggleSidenav()" class="send-button">💬 Chat</button>
-</mat-toolbar>
-
-<div class="main-content">
-<p>🏠 Main content here</p>
-</div>
 </mat-sidenav-container>

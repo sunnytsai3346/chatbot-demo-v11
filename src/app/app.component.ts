@@ -13,11 +13,21 @@ export class AppComponent implements AfterViewChecked {
   messages: { sender: string, text: string }[] = [];
   userMessage: string = '';
   isListening: boolean = false;
+  selectedLanguage: string = 'en'; // Default language: English
+
+  // Available languages (ISO 639-1 codes)
+  languages: { code: string, name: string }[] = [
+    { code: 'en', name: 'English' },
+    { code: 'es', name: 'Spanish' },
+    { code: 'fr', name: 'French' },
+    { code: 'de', name: 'German' },
+    { code: 'zh', name: 'Chinese' }
+    // Add more languages as supported by the translation model
+  ];
 
   private recognition: any;
 
   constructor(private chatbotService: ChatbotService) {
-    // Initialize Web Speech API
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
     if (SpeechRecognition) {
       this.recognition = new SpeechRecognition();
@@ -85,6 +95,7 @@ export class AppComponent implements AfterViewChecked {
       this.isListening = false;
     } else {
       this.isListening = true;
+      this.recognition.lang = this.selectedLanguage + '-' + this.selectedLanguage.toUpperCase(); // e.g., 'es-ES'
       this.recognition.start();
     }
   }
