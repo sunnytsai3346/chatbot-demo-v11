@@ -55,23 +55,23 @@
 
 .user {
   align-self: flex-end;
-  background-color: #007bff;
-  color: white;
+  background-color: #8ED195;
+  color: #333;
   padding: 8px 12px;
   border-radius: 15px;
-  max-width: 80%;
-  font-size: small;
+  max-width: 100%;
+  font-size: 14px;
+  white-space: pre-line;
 }
 
 .bot {
   align-self: flex-start;
-  background-color: #eaeaea;
+  background-color: #eee;
   color: #333;
   padding: 8px 12px;
   border-radius: 15px;
-  max-width: 90%;
-  color: green;
-  font-size: small;
+  max-width: 100%;  
+  font-size: 14px;
   white-space: pre-line;
 }
 
@@ -111,13 +111,16 @@
 }
 
 .voice-button {
-  background-color: #28a745;
-  color: white;
+  background-color: #8ED195;
   border: none;
   border-radius: 5px;
   padding: 10px;
   cursor: pointer;
   font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
 }
 
 .voice-button.listening {
@@ -128,6 +131,14 @@
   background-color: #218838;
 }
 
+.voice-icon {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.2s ease;
+}
+.voice-button:hover .voice-icon {
+  transform: scale(1.1);
+}
 /* Scrollbar Customization */
 .messages::-webkit-scrollbar {
   width: 8px;

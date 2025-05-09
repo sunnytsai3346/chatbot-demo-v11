@@ -14,7 +14,6 @@ export class AppComponent implements AfterViewChecked {
   userMessage: string = '';
   isListening: boolean = false;
   selectedLanguage: string = 'en'; // Default language: English
-
   // Available languages (ISO 639-1 codes)
   languages: { code: string, name: string }[] = [
     { code: 'en', name: 'English' },
@@ -26,6 +25,8 @@ export class AppComponent implements AfterViewChecked {
   ];
 
   private recognition: any;
+  private hasSentMessage = false;
+  //public isStarting: boolean = false;
 
   constructor(private chatbotService: ChatbotService) {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -111,4 +112,18 @@ export class AppComponent implements AfterViewChecked {
       console.error('Scroll error:', err);
     }
   }
+  getVoiceButtonImage(): string {
+    // if (this.isStarting) {
+    //  //return 'assets/images/spinner.gif'; // loading spinner
+    //  return 'assets/images/settings_voice_24dp_FF0000.png'; // red mic
+    // }
+    if (this.isListening) {
+      return 'assets/images/settings_voice_24dp_FF0000.png'; // red mic
+    }
+    if (this.hasSentMessage) {
+      return 'assets/images/pause_24dp_333.png'; // pause icon
+    }
+    return 'assets/images/mic_24dp_333.png'; // default mic
+  }
+  
 }
