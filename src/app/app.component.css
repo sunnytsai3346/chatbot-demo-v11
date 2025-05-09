@@ -124,11 +124,12 @@
 }
 
 .voice-button.listening {
-  background-color: #dc3545;
+  /* background-color: #dc3545; Red background when listening */
+  background-color: #92CE67;
 }
 
-.voice-button:hover {
-  background-color: #218838;
+.voice-button:hover:not(.listening) {
+  background-color: #92CE67;
 }
 
 .voice-icon {
