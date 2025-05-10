@@ -43,7 +43,8 @@ export class AppComponent implements AfterViewChecked {
         this.userMessage = transcript;
       };
 
-      this.recognition.onend = () => {
+      this.recognition.onspeechend  = () => {
+        this.recognition.stop();
         this.isListening = false;
       };
 
