@@ -2,6 +2,14 @@ import { Component, ElementRef, ViewChild, AfterViewChecked } from '@angular/cor
 import { MatSidenav } from '@angular/material/sidenav';
 import { ChatbotService } from './chatbot.service';
 
+
+export interface ChatMessage {
+   sender: string;
+   text: string;
+   isTyping: boolean;
+}
+
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -64,26 +72,26 @@ export class AppComponent implements AfterViewChecked {
 
   sendMessage() {
     if (!this.userMessage.trim()) return;
-
-    this.messages.push({ sender: 'user', text: this.userMessage , isTyping:false });
     
+    this.messages.push({ sender: 'user', text: this.userMessage,isTyping:false });
     // Add typing indicator (bot is "thinking")
-    const typingIndicator = { sender: 'bot', text: 'Generating...', isTyping: true };
+    const typingIndicator:ChatMessage = { sender: 'bot', text: 'Generating...', isTyping: true };
     this.messages.push(typingIndicator);
 
     this.chatbotService.sendMessage(this.userMessage).subscribe(
       (response: any) => {
-        // Remove the typing indicator
+         // Remove the typing indicator
         this.messages = this.messages.filter(msg => !msg.isTyping);
 
+
         response.forEach((msg: any) => {
-          this.messages.push({ sender: 'bot', text: msg.text ,isTyping:false});
+          this.messages.push({ sender: 'bot', text: msg.text,isTyping:false });
         });
       },
       (error) => {
         console.error('Error sending message:', error);
-        this.messages = this.messages.filter(msg => !msg.isTyping);
-        this.messages.push({ sender: 'bot', text: 'Error: Could not connect to the chatbot.' });
+         this.messages = this.messages.filter(msg => !msg.isTyping);
+        this.messages.push({ sender: 'bot', text: 'Error: Could not connect to the chatbot.' ,isTyping:false});        
       }
     );
 
