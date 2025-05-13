@@ -10,7 +10,7 @@ import { ChatbotService } from './chatbot.service';
 export class AppComponent implements AfterViewChecked {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('scrollMe') private chatContainer!: ElementRef;
-  messages: { sender: string, text: string }[] = [];
+  messages: { sender: string, text: string,isTyping?:boolean }[] = [];
   userMessage: string = '';
   isListening: boolean = false;
   selectedLanguage: string = 'en'; // Default language: English
@@ -65,16 +65,24 @@ export class AppComponent implements AfterViewChecked {
   sendMessage() {
     if (!this.userMessage.trim()) return;
 
-    this.messages.push({ sender: 'user', text: this.userMessage });
+    this.messages.push({ sender: 'user', text: this.userMessage , isTyping:false });
+    
+    // Add typing indicator (bot is "thinking")
+    const typingIndicator = { sender: 'bot', text: 'Generating...', isTyping: true };
+    this.messages.push(typingIndicator);
 
     this.chatbotService.sendMessage(this.userMessage).subscribe(
       (response: any) => {
+        // Remove the typing indicator
+        this.messages = this.messages.filter(msg => !msg.isTyping);
+
         response.forEach((msg: any) => {
-          this.messages.push({ sender: 'bot', text: msg.text });
+          this.messages.push({ sender: 'bot', text: msg.text ,isTyping:false});
         });
       },
       (error) => {
         console.error('Error sending message:', error);
+        this.messages = this.messages.filter(msg => !msg.isTyping);
         this.messages.push({ sender: 'bot', text: 'Error: Could not connect to the chatbot.' });
       }
     );

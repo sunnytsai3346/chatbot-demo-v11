@@ -56,8 +56,20 @@
       </mat-form-field>
 
       <div class="messages" #scrollMe>
-        <div *ngFor="let msg of messages" [ngClass]="msg.sender">
-          <b>{{ msg.sender }}:</b> {{ msg.text }}
+        <div *ngFor="let msg of messages">
+          <div [ngClass]="{'user-message': msg.sender === 'user', 'bot-message': msg.sender === 'bot'}">
+            <ng-container *ngIf="!msg.isTyping">
+              {{ msg.text }}
+            </ng-container>
+            <ng-container *ngIf="msg.isTyping">
+              <span class="typing-indicator">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </span>
+            </ng-container>
+          </div>
+          <!-- <b>{{ msg.sender }}:</b> {{ msg.text }} -->
         </div>
       </div>
 
