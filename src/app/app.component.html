@@ -71,6 +71,15 @@
           <div *ngIf="(msg.type === 'text') && !msg.isTyping">
             <b>{{ msg.sender }}:</b> {{ msg.text }}
           </div>
+
+
+          <!-- Display related topic buttons -->
+      <div *ngIf="msg.buttons !== undefined && msg.buttons.length > 0">
+        <button *ngFor="let btn of msg.buttons" (click)="handleButtonClick(btn.payload)" class="btn btn-outline-primary m-1">
+          {{ btn.title }}
+        </button>
+    </div>
+
           <ng-container *ngIf="msg.isTyping">
               <span class="typing-indicator">
                 <span class="dot"></span>
@@ -81,6 +90,8 @@
           
         </div>
       </div>
+
+      
 
       <div class="chat-input">
         <input

@@ -10,6 +10,10 @@ export interface ChatMessage {
   type?: 'text' | 'step_list';
   title?: string;
   steps?: string[];
+  buttons?: {
+    title: string;
+    payload: string;
+  }[];
 }
 
 
@@ -76,11 +80,11 @@ export class AppComponent implements AfterViewChecked {
   sendMessage() {
     if (!this.userMessage.trim()) return;
     
-    const usermessage:ChatMessage = { sender: 'user', text: this.userMessage, isTyping: false, type:"text" };
+    const usermessage:ChatMessage = { sender: 'user', text: this.userMessage, isTyping: false, type:"text" ,buttons:[]};
     this.messages.push(usermessage);
 
     // Add typing indicator (bot is "thinking")
-    const typingIndicator:ChatMessage = { sender: 'bot', text: 'Generating...', isTyping: true, type:"text" };
+    const typingIndicator:ChatMessage = { sender: 'bot', text: 'Generating...', isTyping: true, type:"text",buttons:[] };
     this.messages.push(typingIndicator);
 
     this.chatbotService.sendMessage(this.userMessage).subscribe(
@@ -98,7 +102,8 @@ export class AppComponent implements AfterViewChecked {
               sender: 'bot',
               text: custom.text,
               isTyping: false,
-              type: 'text'
+              type: 'text',
+              buttons: custom.buttons || []  // ✅ handle buttons here
             };
              console.log('103:',responsemsg);
           } else if (custom.type === 'step_list') {
@@ -108,7 +113,8 @@ export class AppComponent implements AfterViewChecked {
               title: (custom.title || '').trim(),
               steps: custom.steps || [],
               isTyping: false,
-              type: 'step_list'
+              type: 'step_list',
+              buttons: custom.buttons || []  // ✅ include buttons if step_list also has them
             };
             console.log('112:',responsemsg);
           }  else {
@@ -117,7 +123,8 @@ export class AppComponent implements AfterViewChecked {
               sender: 'bot',
               text: JSON.stringify(custom),
               isTyping: false,
-              type: 'text'
+              type: 'text',
+              buttons: custom.buttons || []  // ✅ include buttons if step_list also has them
             };
             console.log('122:',responsemsg);
           }           
@@ -133,6 +140,10 @@ export class AppComponent implements AfterViewChecked {
     );
 
     this.userMessage = '';
+  }
+
+  handleButtonClick(payload: string) {
+    this.chatbotService.sendMessage(payload);
   }
 
   clearMessages() {
