@@ -59,14 +59,14 @@
         <!-- <div *ngFor="let msg of messages" [ngClass]="[msg.sender, msg.type === 'step_list' ? 'step-list' : '']"> -->
           <div *ngFor="let msg of messages" [ngClass]="msg.sender">
           <!-- STEP LIST message -->
-          <div *ngIf="msg.type === 'step_list' && !msg.isTyping">
-            <b>{{ msg.sender }}:</b> 
-            <div class="bot-title">{{ msg.title }}</div>
-            <ol class="chatbot-steps">
-              <li *ngFor="let step of msg.steps">{{ step }}</li>
-            </ol>
-          </div>
-
+            <div *ngIf="msg.type === 'step_list' && !msg.isTyping">
+              <b>{{ msg.sender }}:</b> 
+              <div class="bot-title">{{ msg.title }}</div>
+              <ol class="chatbot-steps">
+                <li *ngFor="let step of msg.steps">{{ step }}</li>
+              </ol>
+            </div>
+          
           <!-- REGULAR TEXT message -->
           <div *ngIf="(msg.type === 'text') && !msg.isTyping">
             <b>{{ msg.sender }}:</b> {{ msg.text }}
@@ -75,6 +75,7 @@
 
           <!-- Display related topic buttons -->
       <div *ngIf="msg.buttons !== undefined && msg.buttons.length > 0">
+         <p>{{ msg.text }}</p>
         <button *ngFor="let btn of msg.buttons" (click)="handleButtonClick(btn.payload)" class="btn btn-outline-primary m-1">
           {{ btn.title }}
         </button>

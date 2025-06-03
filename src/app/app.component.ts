@@ -2,6 +2,11 @@ import { Component, ElementRef, ViewChild, AfterViewChecked } from '@angular/cor
 import { MatSidenav } from '@angular/material/sidenav';
 import { ChatbotService } from './chatbot.service';
 
+export interface ChatButton {
+  title: string;
+  payload: string;
+}
+
 
 export interface ChatMessage {
   sender: string;
@@ -10,10 +15,7 @@ export interface ChatMessage {
   type?: 'text' | 'step_list';
   title?: string;
   steps?: string[];
-  buttons?: {
-    title: string;
-    payload: string;
-  }[];
+  buttons?: ChatButton[];
 }
 
 
@@ -117,6 +119,14 @@ export class AppComponent implements AfterViewChecked {
               buttons: custom.buttons || []  // ✅ include buttons if step_list also has them
             };
             console.log('112:',responsemsg);
+          } else if (custom.buttons && Array.isArray(custom.buttons)) {
+            responsemsg = {
+            sender: 'bot',
+            text: custom.text || '',
+            isTyping: false,
+            type: 'text',
+            buttons: custom.buttons,
+          };
           }  else {
             // fallback handler
             responsemsg = {
@@ -143,9 +153,11 @@ export class AppComponent implements AfterViewChecked {
   }
 
   handleButtonClick(payload: string) {
-    this.chatbotService.sendMessage(payload);
+    this.userMessage = payload;
+  this.sendMessage();
   }
 
+  
   clearMessages() {
     this.messages = [];
   }
