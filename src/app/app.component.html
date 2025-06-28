@@ -55,31 +55,12 @@
         </mat-select>
       </mat-form-field>
 
-      <div class="messages" #scrollMe>        
-        <!-- <div *ngFor="let msg of messages" [ngClass]="[msg.sender, msg.type === 'step_list' ? 'step-list' : '']"> -->
-          <div *ngFor="let msg of messages" [ngClass]="msg.sender">
-          <!-- STEP LIST message -->
-            <div *ngIf="msg.type === 'step_list' && !msg.isTyping">
-              <b>{{ msg.sender }}:</b> 
-              <div class="bot-title">{{ msg.title }}</div>
-              <ol class="chatbot-steps">
-                <li *ngFor="let step of msg.steps">{{ step }}</li>
-              </ol>
-            </div>
-          
-          <!-- REGULAR TEXT message -->
-          <div *ngIf="(msg.type === 'text') && !msg.isTyping">
-            <b>{{ msg.sender }}:</b> {{ msg.text }}
+      <div class="messages" #scrollMe>
+       <div *ngFor="let msg of messages" [ngClass]="msg.sender">
+          <div *ngIf="!msg.isTyping">
+              <!-- <b>{{ msg.sender }}:</b> {{ msg.text }} -->
+              {{ msg.text }}
           </div>
-
-
-          <!-- Display related topic buttons -->
-      <div *ngIf="msg.buttons !== undefined && msg.buttons.length > 0">
-         <p>{{ msg.text }}</p>
-        <button *ngFor="let btn of msg.buttons" (click)="handleButtonClick(btn.payload)" class="btn btn-outline-primary m-1">
-          {{ btn.title }}
-        </button>
-    </div>
 
           <ng-container *ngIf="msg.isTyping">
               <span class="typing-indicator">
@@ -91,9 +72,6 @@
           
         </div>
       </div>
-
-      
-
       <div class="chat-input">
         <input
           [(ngModel)]="userMessage"

@@ -9,13 +9,9 @@ export interface ChatButton {
 
 
 export interface ChatMessage {
-  sender: string;
-  text?: string;
-  isTyping: boolean;
-  type?: 'text' | 'step_list';
-  title?: string;
-  steps?: string[];
-  buttons?: ChatButton[];
+   sender: string;
+   text: string;
+   isTyping: boolean;
 }
 
 
@@ -27,7 +23,7 @@ export interface ChatMessage {
 export class AppComponent implements AfterViewChecked {
   @ViewChild('sidenav') sidenav!: MatSidenav;
   @ViewChild('scrollMe') private chatContainer!: ElementRef;
-  messages: ChatMessage[] = [];
+  messages: { sender: string, text: string,isTyping?:boolean }[] = [];
   userMessage: string = '';
   isListening: boolean = false;
   selectedLanguage: string = 'en'; // Default language: English
@@ -82,11 +78,11 @@ export class AppComponent implements AfterViewChecked {
   sendMessage() {
     if (!this.userMessage.trim()) return;
     
-    const usermessage:ChatMessage = { sender: 'user', text: this.userMessage, isTyping: false, type:"text" ,buttons:[]};
-    this.messages.push(usermessage);
+    this.messages.push({ sender: 'user', text: this.userMessage,isTyping:false });
+    
 
     // Add typing indicator (bot is "thinking")
-    const typingIndicator:ChatMessage = { sender: 'bot', text: 'Generating...', isTyping: true, type:"text",buttons:[] };
+    const typingIndicator:ChatMessage = { sender: 'bot', text: 'Generating...', isTyping: true };
     this.messages.push(typingIndicator);
 
     this.chatbotService.sendMessage(this.userMessage).subscribe(
@@ -96,49 +92,7 @@ export class AppComponent implements AfterViewChecked {
         this.messages = this.messages.filter(msg => !msg.isTyping);
         response.forEach((msg: any) => {
           console.log(msg);
-          const custom = msg.custom || msg; // fallback if it's already unwrapped
-          let responsemsg:ChatMessage;
-
-          if (custom.type  === 'text' || !custom.type ) {
-            responsemsg = {
-              sender: 'bot',
-              text: custom.text,
-              isTyping: false,
-              type: 'text',
-              buttons: custom.buttons || []  // ✅ handle buttons here
-            };
-             console.log('103:',responsemsg);
-          } else if (custom.type === 'step_list') {
-             responsemsg = {
-              sender: 'bot',
-              text: '', // optional
-              title: (custom.title || '').trim(),
-              steps: custom.steps || [],
-              isTyping: false,
-              type: 'step_list',
-              buttons: custom.buttons || []  // ✅ include buttons if step_list also has them
-            };
-            console.log('112:',responsemsg);
-          } else if (custom.buttons && Array.isArray(custom.buttons)) {
-            responsemsg = {
-            sender: 'bot',
-            text: custom.text || '',
-            isTyping: false,
-            type: 'text',
-            buttons: custom.buttons,
-          };
-          }  else {
-            // fallback handler
-            responsemsg = {
-              sender: 'bot',
-              text: JSON.stringify(custom),
-              isTyping: false,
-              type: 'text',
-              buttons: custom.buttons || []  // ✅ include buttons if step_list also has them
-            };
-            console.log('122:',responsemsg);
-          }           
-          this.messages.push(responsemsg);
+          this.messages.push({ sender: 'bot', text: msg.text,isTyping:false });
         });
         
       },
