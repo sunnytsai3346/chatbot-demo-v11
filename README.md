@@ -1,4 +1,24 @@
+#### chatbot-demo-v11 & chatbot-demo (Rasa chatbot with frontend UI) ####
+Description:
+A full-stack demonstration of a Rasa chatbot connected to a custom frontend. Version 11 includes new UI hooks, extended metadata, or multilingual support.
+
+README Sections:
+
+🧩 Overview — versions of chatbot UI+backend; v11 has improved frontend features.
+
+🎨 Tech Stack — Rasa, Node.js or Flask backend, React/Angular frontend.
+
+✨ Features — chat UIs, intent selection menus, dynamic response rendering.
+
+🚀 Install & Run — clone repo(s), install dependencies for frontend & backend, run Rasa server and UI.
+
+🎬 Screenshots / Demo GIF — show chat interaction, UI enhancements.
+
+⏩ Versioning Notes — differences in version 11 vs earlier versions, improvements.
+----
+
 # ChatbotDemoV11
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.14.
 
