@@ -38,7 +38,7 @@
   overflow: hidden;
   padding: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  background-color: #f9f9f9;
+  background-color: #000;
 }
 
 .messages {
@@ -66,8 +66,8 @@
 
 .bot {
   align-self: flex-start;
-  background-color: #eee;
-  color: #333;
+  background-color: #000;
+  color: #d0d0d0;
   padding: 8px 12px;
   border-radius: 15px;
   max-width: 100%;  
@@ -108,6 +108,24 @@
 
 .send-button:hover {
   background-color: #0056b3;
+}
+.upload-button {
+  background-color: #ecdf93;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+.button-group {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .voice-button {
@@ -166,6 +184,15 @@
   width: 100%;
   margin-bottom: 1rem;
 }
+
+    
+  
+  .mat-dialog-title{
+    margin-bottom: 0;
+    background-color: #424242 !important;
+  }
+
+
 .typing-indicator {
   display: inline-block;
   padding: 0 8px;
@@ -249,3 +276,23 @@
   line-height: 1;
   color: green;      /* or any accent color */
 }
+
+::ng-deep .markdown-content h1,
+.markdown-content h2 {
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+::ng-deep .markdown-content ul {
+  padding-left: 1.5rem;
+}
+
+::ng-deep .markdown-content li {
+  margin-bottom: 0.3rem;
+}
+
+::ng-deep .markdown-content a {
+  color: #d2deebfd;
+  text-decoration: underline;
+}
+
